@@ -13,7 +13,7 @@ class EncoderRNN(nn.Module):
         self.embedding = embedding
 
         self.gru = nn.GRU(hidden_size, hidden_size, n_layers,
-                          dropout=(0 if n_layers == 1 else dropout), bidirectional=True)
+                          dropout=(0 if n_layers == 1 else dropout), bidirectional=False)
 
     def forward(self, input_seq, input_lengths, hidden=None):
         embedded = self.embedding(input_seq)
