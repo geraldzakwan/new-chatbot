@@ -32,7 +32,18 @@ def filename(reverse, obj):
 # Prepare Training Data
 #############################################
 def indexesFromSentence(voc, sentence):
-    return [voc.word2index[word] for word in sentence.split(' ')] + [EOS_token]
+	sentence_embedding = []
+
+	for word in sentence.split(' '):
+		if(word in voc.word2index):
+			sentence_embedding.append(voc.word2index[word])
+		else:
+			sentence_embedding.append(PAD_token)
+
+	sentence_embedding.append(EOS_token)
+
+	return sentence_embedding
+	# return [voc.word2index[word] for word in sentence.split(' ')] + [EOS_token]
 
 # batch_first: true -> false, i.e. shape: seq_len * batch
 def zeroPadding(l, fillvalue=PAD_token):

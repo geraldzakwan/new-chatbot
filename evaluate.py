@@ -143,7 +143,7 @@ def evaluateInput(encoder, decoder, voc, beam_size):
             if pair == 'q': break
             if beam_size == 1:
                 output_words, _ = evaluate(encoder, decoder, voc, pair, beam_size)
-                output_sentence = ' '.join(output_words)
+                output_sentence = ' '.join(output_words[0: len(output_words)-1])
                 print('<', output_sentence)
             else:
                 output_words_list = evaluate(encoder, decoder, voc, pair, beam_size)
