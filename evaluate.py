@@ -129,7 +129,7 @@ def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=0):
 
     if(n == 0):
         n = len(pairs)
-        
+
     for i in range(n):
         print(i+1)
 
@@ -199,7 +199,7 @@ def runTest(n_layers, hidden_size, reverse, modelFile, beam_size, inp, corpus):
     voc, pairs = loadPrepareData(corpus)
     embedding = nn.Embedding(voc.n_words, hidden_size)
     encoder = EncoderRNN(voc.n_words, hidden_size, embedding, n_layers)
-    attn_model = 'dot'
+    attn_model = 'none'
     decoder = LuongAttnDecoderRNN(attn_model, embedding, hidden_size, voc.n_words, n_layers)
 
     checkpoint = torch.load(modelFile)
