@@ -1,3 +1,4 @@
+import sys
 import torch
 import random
 from train import indexesFromSentence
@@ -118,22 +119,55 @@ def evaluate(encoder, decoder, voc, sentence, beam_size, max_length=MAX_LENGTH):
 
 
 def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=10):
-    for _ in range(n):
+    from nltk.translate.bleu_score import sentence_bleu
+
+    sum_bleu_score_1 = 0
+    sum_bleu_score_2 = 0
+    sum_bleu_score_3 = 0
+    sum_bleu_score_4 = 0
+
+    for i in range(n):
+        print(i+1)
+
         pair = random.choice(pairs)
-        print("=============================================================")
-        if reverse:
-            print('>', " ".join(reversed(pair[0].split())))
-        else:
-            print('>', pair[0])
+        # print("=============================================================")
+        # if reverse:
+        #     print('>', " ".join(reversed(pair[0].split())))
+        # else:
+        #     print('>', pair[0])
+
+        reference = pair[1].split(' ')
+
         if beam_size == 1:
             output_words, _ = evaluate(encoder, decoder, voc, pair[0], beam_size)
+            output_words = output_words[0:len(output_words)-1]
             output_sentence = ' '.join(output_words)
-            print('<', output_sentence)
+            # print('<', output_sentence)
+
+            # print(reference)
+            # print(output_words)
+
+            sum_bleu_score_1 = sum_bleu_score_1 + sentence_bleu(reference, output_words, weights=(1, 0, 0, 0))
+            sum_bleu_score_2 = sum_bleu_score_2 + sentence_bleu(reference, output_words, weights=(0.5, 0.5, 0, 0))
+            sum_bleu_score_3 = sum_bleu_score_3 + sentence_bleu(reference, output_words, weights=(0.33, 0.33, 0.33, 0))
+            sum_bleu_score_4 = sum_bleu_score_4 + sentence_bleu(reference, output_words, weights=(0.25, 0.25, 0.25, 0.25))
+
         else:
             output_words_list = evaluate(encoder, decoder, voc, pair[0], beam_size)
             for output_words, score in output_words_list:
+                output_words = output_words[0:len(output_words)-1]
                 output_sentence = ' '.join(output_words)
-                print("{:.3f} < {}".format(score, output_sentence))
+                # print("{:.3f} < {}".format(score, output_sentence))
+
+            sum_bleu_score_1 = sum_bleu_score_1 + sentence_bleu(reference, output_words, weights=(1, 0, 0, 0))
+            sum_bleu_score_2 = sum_bleu_score_2 + sentence_bleu(reference, output_words, weights=(0.5, 0.5, 0, 0))
+            sum_bleu_score_3 = sum_bleu_score_3 + sentence_bleu(reference, output_words, weights=(0.33, 0.33, 0.33, 0))
+            sum_bleu_score_4 = sum_bleu_score_4 + sentence_bleu(reference, output_words, weights=(0.25, 0.25, 0.25, 0.25))
+
+    print('BLEU-1 : ' + str(round(sum_bleu_score_1/n, 2)))
+    print('BLEU-2 : ' + str(round(sum_bleu_score_2/n, 2)))
+    print('BLEU-3 : ' + str(round(sum_bleu_score_3/n, 2)))
+    print('BLEU-4 : ' + str(round(sum_bleu_score_4/n, 2)))
 
 def evaluateInput(encoder, decoder, voc, beam_size):
     pair = ''
