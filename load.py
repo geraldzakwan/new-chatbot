@@ -4,6 +4,7 @@ import os
 import unicodedata
 
 from config import MAX_LENGTH, save_dir
+from nltk.tokenize import word_tokenize
 
 SOS_token = 0
 EOS_token = 1
@@ -18,7 +19,8 @@ class Voc:
         self.n_words = 3  # Count SOS and EOS
 
     def addSentence(self, sentence):
-        for word in sentence.split(' '):
+        # for word in sentence.split(' '):
+        for word in word_tokenize(sentence):
             self.addWord(word)
 
     def addWord(self, word):
@@ -64,8 +66,10 @@ def readVocs(corpus, corpus_name):
 
 def filterPair(p):
     # input sequences need to preserve the last word for EOS_token
-    return len(p[0].split(' ')) < MAX_LENGTH and \
-        len(p[1].split(' ')) < MAX_LENGTH
+    # return len(p[0].split(' ')) < MAX_LENGTH and \
+    #     len(p[1].split(' ')) < MAX_LENGTH
+    return len(word_tokenize(p[0])) < MAX_LENGTH and \
+        len(word_tokenize(p[1])) < MAX_LENGTH
 
 def filterPairs(pairs):
     return [pair for pair in pairs if filterPair(pair)]

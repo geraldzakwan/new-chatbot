@@ -32,9 +32,11 @@ def filename(reverse, obj):
 # Prepare Training Data
 #############################################
 def indexesFromSentence(voc, sentence):
+	from nltk.tokenize import word_tokenize
 	sentence_embedding = []
 
-	for word in sentence.split(' '):
+	# for word in sentence.split(' '):
+	for word in word_tokenize(sentence):
 		if(word in voc.word2index):
 			sentence_embedding.append(voc.word2index[word])
 		else:

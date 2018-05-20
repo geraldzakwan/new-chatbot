@@ -120,6 +120,7 @@ def evaluate(encoder, decoder, voc, sentence, beam_size, max_length=MAX_LENGTH):
 
 def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=10):
     from nltk.translate.bleu_score import sentence_bleu
+    from nltk.tokenize import word_tokenize
 
     sum_bleu_score_1 = 0
     sum_bleu_score_2 = 0
@@ -136,7 +137,8 @@ def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=10):
         # else:
         #     print('>', pair[0])
 
-        reference = pair[1].split(' ')
+        # reference = pair[1].split(' ')
+        reference = word_tokenize(pair[1])
 
         if beam_size == 1:
             output_words, _ = evaluate(encoder, decoder, voc, pair[0], beam_size)
