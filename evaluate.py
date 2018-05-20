@@ -118,7 +118,7 @@ def evaluate(encoder, decoder, voc, sentence, beam_size, max_length=MAX_LENGTH):
         return beam_decode(decoder, decoder_hidden, encoder_outputs, voc, beam_size)
 
 
-def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=10):
+def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=0):
     from nltk.translate.bleu_score import sentence_bleu
     from nltk.tokenize import word_tokenize
 
@@ -127,6 +127,9 @@ def evaluateRandomly(encoder, decoder, voc, pairs, reverse, beam_size, n=10):
     sum_bleu_score_3 = 0
     sum_bleu_score_4 = 0
 
+    if(n == 0):
+        n = len(pairs)
+        
     for i in range(n):
         print(i+1)
 
